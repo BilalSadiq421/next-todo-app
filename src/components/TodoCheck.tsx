@@ -1,13 +1,18 @@
-import React from 'react';
-import { Button, TextField, Typography } from '@material-ui/core';
-import { useDispatch, useSelector } from 'react-redux';
-import { Todo, addTodo, useTodos } from '@/redux/todoSlice';
-import { RootState } from '@/store/store';
-import { useAppDispatch } from '@/store/hooks';
+import React from "react";
+import { Button, TextField, Typography } from "@material-ui/core";
+import { Todo, addTodo, useTodos } from "@/redux/todoSlice";
+import { useAppDispatch } from "@/store/hooks";
+import { useRouter } from "next/router";
 
 const TodoCheck: React.FC = () => {
+  const router = useRouter();
   const dispatch = useAppDispatch();
-  const todos = useTodos()
+  const todos: Todo[] = useTodos();
+
+  const setUserLogOut = () => {
+    localStorage.removeItem("userAuthData");
+    router.push("/login");
+  };
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -20,7 +25,7 @@ const TodoCheck: React.FC = () => {
       completed: false,
     };
     dispatch(addTodo(newTodo));
-    target.todoInput.value = '';
+    target.todoInput.value = "";
   };
 
   return (
@@ -39,8 +44,11 @@ const TodoCheck: React.FC = () => {
           Add
         </Button>
       </form>
+      <Button variant="contained" color="primary" onClick={setUserLogOut}>
+        Sign out
+      </Button>
       <ul>
-        {todos.map((todo:Todo) => (
+        {todos.map((todo: Todo) => (
           <li key={todo.id}>{todo.text}</li>
         ))}
       </ul>
