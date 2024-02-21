@@ -1,19 +1,21 @@
 import Head from "next/head";
-import TodoCheck from "@/components/TodoCheck";
+import DashboardScreen from "@/components/DashboardScreen";
 import { Provider } from "react-redux";
 import { store } from "@/store/store";
 import { useRouter } from "next/router";
 import { isUserAuthenticated } from "@/utils/helper";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import { Login } from "@mui/icons-material";
+import SignIn from "./login";
 
 export default function Home() {
-  const router = useRouter();
+  const [authenticated, setAuthenticated] = useState(false)
 
   //Authenticating user on main page
   //Navigate to Main page or sigin depending on status
+
   useEffect(() => {
-    const userAuthenticated = isUserAuthenticated();
-    if (!userAuthenticated) router.push("/login");
+      setAuthenticated(isUserAuthenticated());
   }, []);
       
   return (
@@ -24,11 +26,9 @@ export default function Home() {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <main>
         <Provider store={store}>
-          <TodoCheck />
+          {authenticated ? <DashboardScreen /> : <SignIn />}
         </Provider>
-      </main>
     </>
   );
 }
